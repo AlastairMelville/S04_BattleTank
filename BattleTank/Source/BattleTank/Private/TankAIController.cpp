@@ -7,6 +7,8 @@
 
 void ATankAIController::BeginPlay()
 {
+	Super::BeginPlay();
+
 	// Get your controlled tank
 	ATank* controlled_tank = GetTank();
 	if (controlled_tank == nullptr) { UE_LOG(LogTemp, Error, TEXT("[%s] Controlled tank is a nullptr"), *this->GetName()) return; }
@@ -24,7 +26,7 @@ void ATankAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	AimTowardsCrosshair();
+	AimTowardsPlayer();
 }
 
 ATank* ATankAIController::GetTank() const 
@@ -38,10 +40,13 @@ APawn* ATankAIController::GetPlayerTank() const
 	return player_tank;
 }
 
-void ATankAIController::AimTowardsCrosshair()
+void ATankAIController::AimTowardsPlayer()
 {
-	if (!GetTank()) { UE_LOG(LogTemp, Error, TEXT("[%s] Cannot find controlled tank"), *this->GetName()) return; }
-
-
+	if (!GetTank()) { /* UE_LOG(LogTemp, Error, TEXT("[%s] Cannot find controlled tank"), *this->GetName()) */ return; }
+		
+	GetTank()->AimTowardsTarget(GetPlayerTank()->GetActorLocation());
+	/// UE_LOG(LogTemp, Warning, TEXT("[%s] is aiming towards: %s"), *this->GetName(), *player_location.ToString())
 }
+
+
 
